@@ -13,7 +13,7 @@ import java.io.ByteArrayInputStream;
 import java.util.Date;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*",allowedHeaders = "*")
 @RequestMapping("/pdf")
 public class PdfController {
 
