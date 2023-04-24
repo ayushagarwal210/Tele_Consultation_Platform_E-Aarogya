@@ -7,12 +7,14 @@ import com.shield.eaarogya.Service.AppointmentService;
 import com.shield.eaarogya.Service.DoctorService;
 import com.shield.eaarogya.Service.PrescriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*",allowedHeaders = "*")
+@CrossOrigin(origins = "*")
+@PreAuthorize("hasRole('ROLE_DOCTOR')")
 @RequestMapping("/doctor")
 public class DoctorController {
 
@@ -65,6 +67,13 @@ public class DoctorController {
         return appointmentService.getAppointmentByPreferredLanguageAndDepartmentName(
                 Long.parseLong(doctorId)
         );
+    }
+
+    // -------------------------------------- Update Doctor Profile ---------------------------------------
+    // (You have to send every details to the API)
+    @PutMapping("/updateDoctor/{doctorId}")
+    public DoctorDetails updateDoctor(@RequestBody DoctorDetails doctorDetails, @PathVariable String doctorId) {
+        return doctorService.updateDoctor(doctorDetails, Long.parseLong(doctorId));
     }
 
     // ------------------------ Logout the doctor and update the isOnline doctor to FALSE --------------------------

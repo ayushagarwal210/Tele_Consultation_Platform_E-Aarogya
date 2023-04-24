@@ -3,6 +3,7 @@ package com.shield.eaarogya.Controller;
 import com.shield.eaarogya.Entity.Department;
 import com.shield.eaarogya.Service.DepartmentService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;

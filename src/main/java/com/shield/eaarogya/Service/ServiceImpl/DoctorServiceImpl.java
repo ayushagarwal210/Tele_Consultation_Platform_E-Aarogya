@@ -145,6 +145,49 @@ public class DoctorServiceImpl implements DoctorService {
         }
     }
 
+    // ------------------------------------- Update Doctor details ----------------------------------------
+
+    @Override
+    public DoctorDetails updateDoctor(DoctorDetails doctorDetails, long doctorId) {
+        Doctor doctor;
+
+        Set<String> languagesSpeak = doctorDetails.getDoctorLanguages();
+        Set<String> languages = new HashSet<>();
+
+        for(String s: languagesSpeak)
+            languages.add(s.toLowerCase());
+
+        if(doctorRepository.findById(doctorId).isPresent()) {
+            doctor = doctorRepository.findById(doctorId).get();
+            doctor.setEmail(doctorDetails.getEmail());
+            doctor.setAddr(doctorDetails.getAddr());
+            doctor.setPincode(doctorDetails.getPincode());
+            doctor.setCity(doctorDetails.getCity());
+            doctor.setDoctorLanguages(languages);
+
+            Doctor updatedDoctor = doctorRepository.save(doctor);
+
+            return new DoctorDetails(
+                    updatedDoctor.getDoctorId(),
+                    updatedDoctor.getTitle(),
+                    updatedDoctor.getFirstName(),
+                    updatedDoctor.getLastName(),
+                    updatedDoctor.getEmail(),
+                    updatedDoctor.getPhoneNumber(),
+                    updatedDoctor.getRegistration_number(),
+                    updatedDoctor.getDob(),
+                    updatedDoctor.getGender(),
+                    updatedDoctor.getAddr(),
+                    updatedDoctor.getCity(),
+                    updatedDoctor.getPincode(),
+                    updatedDoctor.getDepartment().getDepartmentName(),
+                    updatedDoctor.getDoctorLanguages()
+            );
+        }
+        else return null;
+
+    }
+
     // ------------------------------ Logout doctor and set doctor online to false -----------------------------------
 
     @Override

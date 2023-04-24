@@ -15,4 +15,6 @@ public interface DoctorService {
     DoctorDetails getDoctorByPhoneNumber(String phoneNumber);
 
     boolean doctorLogout(long doctorId);
+
+    DoctorDetails updateDoctor(DoctorDetails doctorDetails, long doctorId);
 }

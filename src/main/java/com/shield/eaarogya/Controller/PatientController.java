@@ -1,17 +1,18 @@
 package com.shield.eaarogya.Controller;
 
 import com.shield.eaarogya.DTO.FollowUpDetails;
-import com.shield.eaarogya.DTO.PatientDetails;
 import com.shield.eaarogya.Entity.Patient;
 import com.shield.eaarogya.Service.PatientService;
 import com.shield.eaarogya.Service.PrescriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*",allowedHeaders = "*")
+@CrossOrigin(origins = "*")
+@PreAuthorize("hasRole('ROLE_PATIENT')")
 @RequestMapping("/patient")
 public class PatientController {
 
@@ -29,7 +30,7 @@ public class PatientController {
 
     // -------------------------------- Adding Patient to database -------------------------------
     @PostMapping("/addPatient")
-    public Patient addPatient(Patient patient) {
+    public Patient addPatient(@RequestBody Patient patient) {
         return this.patientService.addPatient(patient);
     }
 

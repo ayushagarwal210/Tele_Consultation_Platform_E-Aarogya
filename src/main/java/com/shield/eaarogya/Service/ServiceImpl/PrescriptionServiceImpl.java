@@ -2,6 +2,8 @@ package com.shield.eaarogya.Service.ServiceImpl;
 
 import com.shield.eaarogya.DTO.DailyLogDetails;
 import com.shield.eaarogya.DTO.FollowUpDetails;
+import com.shield.eaarogya.Entity.Consultation;
+import com.shield.eaarogya.Repository.ConsultationRepository;
 import com.shield.eaarogya.Repository.DoctorRepository;
 import com.shield.eaarogya.Repository.PatientRepository;
 import com.shield.eaarogya.DTO.PrescriptionDetails;
@@ -9,10 +11,12 @@ import com.shield.eaarogya.Repository.PrescriptionRepository;
 import com.shield.eaarogya.Entity.Doctor;
 import com.shield.eaarogya.Entity.Patient;
 import com.shield.eaarogya.Entity.Prescription;
+import com.shield.eaarogya.Service.ConsultationService;
 import com.shield.eaarogya.Service.PrescriptionService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -28,6 +32,9 @@ public class PrescriptionServiceImpl implements PrescriptionService {
 
     @Autowired
     PatientRepository patientRepository;
+
+    @Autowired
+    ConsultationRepository consultationRepository;
 
     // --------------------- Get Prescription of a patient based on his ID --------------------------------
     @Override
@@ -85,6 +92,7 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     }
 
     // ------------------------ Add a prescription to database ---------------------------------------
+    @Transactional
     @Override
     public PrescriptionDetails addPrescription(PrescriptionDetails prescriptionDetails) {
 
@@ -109,6 +117,14 @@ public class PrescriptionServiceImpl implements PrescriptionService {
                 );
 
                 prescriptionRepository.save(prescription);
+
+                // Saving consultation record also
+                consultationRepository.save(
+                        new Consultation(prescriptionDetails.getConsultationDate(),
+                                prescribingDoctor,
+                                prescribedPatient)
+                );
+
                 return prescriptionDetails;
             }
             else return null;
