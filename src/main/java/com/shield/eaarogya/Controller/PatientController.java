@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
-@PreAuthorize("hasRole('ROLE_PATIENT')")
+@CrossOrigin(origins = "*",allowedHeaders = "*")
+//@PreAuthorize("hasRole('ROLE_PATIENT')")
 @RequestMapping("/patient")
 public class PatientController {
 

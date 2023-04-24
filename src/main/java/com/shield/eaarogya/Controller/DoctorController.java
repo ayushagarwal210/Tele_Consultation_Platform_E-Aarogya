@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
-@PreAuthorize("hasRole('ROLE_DOCTOR')")
+@CrossOrigin(origins = "*",allowedHeaders = "*")
+//@PreAuthorize("hasRole('ROLE_DOCTOR')")
 @RequestMapping("/doctor")
 public class DoctorController {
 

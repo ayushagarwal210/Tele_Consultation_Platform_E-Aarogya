@@ -19,7 +19,7 @@ public class PrescriptionController {
     PrescriptionService prescriptionService;
 
     // ------------------------------ Getting All the Prescriptions of particular patient ---------------------------------
-    @PreAuthorize("hasRole('ROLE_PATIENT')")
+//    @PreAuthorize("hasRole('ROLE_PATIENT')")
     @GetMapping("/getPrescriptions/{patientId}")
     public List<PrescriptionDetails> getPrescriptions(@PathVariable String patientId) {
         return this.prescriptionService.getPrescriptions(Long.parseLong(patientId));
@@ -32,7 +32,7 @@ public class PrescriptionController {
 //    }
 
     // -------------------------------------- Adding Prescription to the Database ----------------------------------------
-    @PreAuthorize("hasRole('ROLE_DOCTOR')")
+//    @PreAuthorize("hasRole('ROLE_DOCTOR')")
     @PostMapping("/addPrescription")
     public PrescriptionDetails addPrescription(@RequestBody PrescriptionDetails prescriptionDetails) {
         return this.prescriptionService.addPrescription(prescriptionDetails);
