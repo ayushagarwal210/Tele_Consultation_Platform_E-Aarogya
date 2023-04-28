@@ -24,6 +24,8 @@ public class AppointmentDetails {
 
     private String preferredLanguage;
 
+    private boolean isAccepted;
+
     // ---------------------------------------- Constructor --------------------------------------------
 
     public AppointmentDetails(Date appointmentTimestamp, long patientId, String departmentName, String preferredLanguage) {
@@ -35,6 +37,7 @@ public class AppointmentDetails {
 
     // ------------------------------- toString ----------------------------------------------
 
+
     @Override
     public String toString() {
         return "AppointmentDetails{" +
@@ -43,6 +46,7 @@ public class AppointmentDetails {
                 ", patientId=" + patientId +
                 ", departmentName='" + departmentName + '\'' +
                 ", preferredLanguage='" + preferredLanguage + '\'' +
+                ", isAccepted=" + isAccepted +
                 '}';
     }
 }

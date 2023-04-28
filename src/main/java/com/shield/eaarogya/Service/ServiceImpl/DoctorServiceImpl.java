@@ -188,6 +188,7 @@ public class DoctorServiceImpl implements DoctorService {
 
     }
 
+
     // ------------------------------ Logout doctor and set doctor online to false -----------------------------------
 
     @Override

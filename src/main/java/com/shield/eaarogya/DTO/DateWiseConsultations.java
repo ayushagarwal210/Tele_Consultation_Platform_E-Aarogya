@@ -1,28 +1,20 @@
 package com.shield.eaarogya.DTO;
 
 import lombok.AllArgsConstructor;
-import lombok.Getter;
+import lombok.Data;
 import lombok.NoArgsConstructor;
-import lombok.Setter;
 
 import javax.persistence.Temporal;
 import javax.persistence.TemporalType;
 import java.util.Date;
 
-@Getter
-@Setter
-@NoArgsConstructor
+@Data
 @AllArgsConstructor
-public class DailyLogDetails {
-
-    private long doctorId;
+@NoArgsConstructor
+public class DateWiseConsultations {
 
     @Temporal(TemporalType.DATE)
-    private Date currentDate;
+    private Date dateOfConsultation;
 
-    private long patientId;
-
-    private String observation;
-
-    private String remark;
+    private long totalConsultations;
 }

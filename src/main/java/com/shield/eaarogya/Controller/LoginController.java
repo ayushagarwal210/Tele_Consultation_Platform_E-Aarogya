@@ -5,6 +5,7 @@ import com.shield.eaarogya.Entity.Patient;
 import com.shield.eaarogya.Service.DoctorService;
 import com.shield.eaarogya.Service.PatientService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 @RestController

@@ -25,9 +25,30 @@ public class AppointmentController {
 
     // ------------------------------------- Get list of all Appointments -------------------------------
 
+    @PreAuthorize("hasRole('ROLE_DOCTOR')")
     @GetMapping("/getAllAppointments")
     public List<AppointmentDetails> getAllAppointments() {
         return appointmentService.getAllAppointments();
+    }
+
+    // ------------------------------------ Appointment Accepted -------------------------------------------------------
+//    @PutMapping("/appointmentAccepted/{appointmentId}")
+//    public boolean appointmentAccepted(@PathVariable String appointmentId) {
+//        return appointmentService.appointmentAccepted(Long.parseLong(appointmentId));
+//    }
+
+    // -------------------------- Delete the Appointment status record using patientId ---------------------------
+    @PreAuthorize("hasRole('ROLE_PATIENT')")
+    @DeleteMapping("/deleteAppointmentStatus/{patientId}")
+    public boolean deleteAppointmentStatus(@PathVariable String patientId) {
+        return appointmentService.deleteAppointmentStatus(Long.parseLong(patientId));
+    }
+
+    // --------------------- on patient side, check if appointment accepted by the doctor or not -------------------------
+    @PreAuthorize("hasRole('ROLE_PATIENT')")
+    @GetMapping("/isAppointmentAccepted/{patientId}")
+    public boolean isAppointmentAccepted(@PathVariable String patientId) {
+        return appointmentService.isAppointmentAccepted(Long.parseLong(patientId));
     }
 
     // ------------------------------------ Delete a Particular Appointment ----------------------------------
@@ -54,6 +75,7 @@ public class AppointmentController {
     }
 
     // -------------------------- Get List of all Appointments for particular department ----------------------
+    @PreAuthorize("hasRole('ROLE_DOCTOR')")
     @GetMapping("/getAllAppointments/{departmentName}")
     public List<AppointmentDetails> getAllAppointments(@PathVariable String departmentName) {
         return appointmentService.getAppointmentsByDepartment(departmentName);

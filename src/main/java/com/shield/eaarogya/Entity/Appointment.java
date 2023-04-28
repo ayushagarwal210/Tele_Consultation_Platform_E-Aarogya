@@ -23,7 +23,11 @@ public class Appointment {
     private long appointmentId;
     // Note: Basic attribute type cannot be persistence entity
 
-    @ManyToOne(fetch = FetchType.LAZY)
+
+    @Column(name="isAccepted", nullable = false)
+    private boolean isAccepted;
+
+    @OneToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "patient", referencedColumnName = "patientId", unique = true)
     private Patient patient;
 
@@ -45,9 +49,11 @@ public class Appointment {
         this.department = department;
         this.appointmentTimestamp = appointmentTimestamp;
         this.preferredLanguage = preferredLanguage;
+        this.isAccepted = false;
     }
 
     // ------------------------------------------- ToString() ----------------------------------------------
+
 
     @Override
     public String toString() {
@@ -56,7 +62,8 @@ public class Appointment {
                 ", patient=" + patient +
                 ", appointmentTimestamp=" + appointmentTimestamp +
                 ", department=" + department +
-                ", preferred Language=" + preferredLanguage +
+                ", preferredLanguage='" + preferredLanguage + '\'' +
+                ", isAccepted=" + isAccepted +
                 '}';
     }
 }

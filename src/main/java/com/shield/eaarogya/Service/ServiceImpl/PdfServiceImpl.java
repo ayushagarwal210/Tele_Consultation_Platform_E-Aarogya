@@ -98,7 +98,7 @@ public class PdfServiceImpl implements PdfService {
             document.add(headerTable);
 
             // ================================ Trying to add image to the pdf ==================================
-            Image logo = Image.getInstance("C:\\Users\\AYUSH AGARWAL\\Downloads\\HAD_TeleConsultation-main\\HAD_TeleConsultation-main\\Tele_Consultation_Platform_E-Aarogya\\src\\main\\java\\com\\shield\\eaarogya\\Service\\ServiceImpl\\GradientLogo.png");
+            Image logo = Image.getInstance("src/main/java/com/shield/eaarogya/Service/ServiceImpl/GradientLogo.png");
             logo.scaleAbsolute(150, 100);
             logo.setAbsolutePosition(400, 715);
             document.add(logo);

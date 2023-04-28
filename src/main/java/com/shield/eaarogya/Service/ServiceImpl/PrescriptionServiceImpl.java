@@ -11,8 +11,8 @@ import com.shield.eaarogya.Repository.PrescriptionRepository;
 import com.shield.eaarogya.Entity.Doctor;
 import com.shield.eaarogya.Entity.Patient;
 import com.shield.eaarogya.Entity.Prescription;
-import com.shield.eaarogya.Service.ConsultationService;
 import com.shield.eaarogya.Service.PrescriptionService;
+import com.shield.eaarogya.Service.StorageService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -36,12 +36,19 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     @Autowired
     ConsultationRepository consultationRepository;
 
+    @Autowired
+    StorageService storageService;
+
     // --------------------- Get Prescription of a patient based on his ID --------------------------------
     @Override
     public List<PrescriptionDetails> getPrescriptions(long patientId) {
         try {
-            List<Prescription> prescriptionList = prescriptionRepository.findPrescriptionsByPatient_PatientId(patientId);
+            List<Prescription> prescriptionList = prescriptionRepository
+                    .findPrescriptionsByPatient_PatientId(patientId);
 
+            Collections.reverse(prescriptionList);
+
+            Collections.reverse(prescriptionList);
             List<PrescriptionDetails> prescriptionDetailsList = new ArrayList<>();
 
             for (Prescription prescription : prescriptionList) {
@@ -124,6 +131,9 @@ public class PrescriptionServiceImpl implements PrescriptionService {
                                 prescribingDoctor,
                                 prescribedPatient)
                 );
+
+                // Flushing S3 for this particular consultation using patient Id
+                storageService.deleteAllFiles(prescribedPatient.getPatientId() + "");
 
                 return prescriptionDetails;
             }
@@ -228,7 +238,8 @@ public class PrescriptionServiceImpl implements PrescriptionService {
                             prescription.getDoctor().getDoctorId(),
                             prescription.getConsultationDate(),
                             prescription.getPatient().getPatientId(),
-                            prescription.getObservation()
+                            prescription.getObservation(),
+                            prescription.getRemark()
                     ));
                 }
             }

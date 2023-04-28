@@ -1,11 +1,9 @@
 package com.shield.eaarogya.Service.ServiceImpl;
 
 import com.shield.eaarogya.DTO.AppointmentDetails;
-import com.shield.eaarogya.Entity.Appointment;
-import com.shield.eaarogya.Entity.Department;
-import com.shield.eaarogya.Entity.Doctor;
-import com.shield.eaarogya.Entity.Patient;
+import com.shield.eaarogya.Entity.*;
 import com.shield.eaarogya.Repository.AppointmentRepository;
+import com.shield.eaarogya.Repository.AppointmentStatusRepository;
 import com.shield.eaarogya.Repository.DoctorRepository;
 import com.shield.eaarogya.Service.AppointmentService;
 import com.shield.eaarogya.Service.DepartmentService;
@@ -14,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
@@ -33,6 +32,10 @@ public class AppointmentServiceImpl implements AppointmentService {
     @Autowired
     private DoctorRepository doctorRepository;
 
+    @Autowired
+    private AppointmentStatusRepository appointmentStatusRepository;
+
+    @Transactional
     @Override
     public long requestAppointment(AppointmentDetails appointmentDetails) {
         try {
@@ -47,6 +50,10 @@ public class AppointmentServiceImpl implements AppointmentService {
             );
             Appointment savedAppointment = appointmentRepository.save(appointment);
 
+            // Saving appointment status also
+            AppointmentStatus appointmentStatus = new AppointmentStatus(patient, false);
+            appointmentStatusRepository.save(appointmentStatus);
+
             return savedAppointment.getAppointmentId();
 
         } catch (DataIntegrityViolationException d) {
@@ -54,7 +61,7 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
         catch (Exception e) {
             e.printStackTrace();
-            System.out.println("Error Occured while requesting for an appointment.");
+            System.out.println("Error Occurred while requesting for an appointment.");
             return -1;
         }
     }
@@ -71,7 +78,8 @@ public class AppointmentServiceImpl implements AppointmentService {
                         appointment.getAppointmentTimestamp(),
                         appointment.getPatient().getPatientId(),
                         appointment.getDepartment().getDepartmentName(),
-                        appointment.getPreferredLanguage()
+                        appointment.getPreferredLanguage(),
+                        appointment.isAccepted()
                 ));
             }
 
@@ -83,11 +91,58 @@ public class AppointmentServiceImpl implements AppointmentService {
         }
     }
 
+    // --------------------------------------- Appointment Accepted ----------------------------------------------------
+
+    @Override
+    public boolean appointmentAccepted(long appointmentId) {
+
+        try {
+            Appointment appointment = appointmentRepository.findByAppointmentId(appointmentId);
+            appointment.setAccepted(true);
+
+            appointmentRepository.save(appointment);
+
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // ---------------------------- Check if appointment is accepted or not --------------------------------------------
+    // We are checking this from AppointmentStatus Repository
+    @Override
+    public boolean isAppointmentAccepted(long patientId) {
+        AppointmentStatus appointmentStatus = appointmentStatusRepository.findByPatient_PatientId(patientId);
+
+        return appointmentStatus.isStatus();
+    }
+
+    // --------------------------- Delete Appointment Status using patientId -----------------------------------------
+    @Override
+    public boolean deleteAppointmentStatus(long patientId) {
+        try {
+            appointmentStatusRepository.delete(appointmentStatusRepository.findByPatient_PatientId(patientId));
+            return true;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    // ---------------------------------- Delete appointment using appointmentId ------------------------------------
     @Override
     public boolean deleteAppointment(long appointmentId) {
 
         try {
             Appointment appointment = appointmentRepository.findByAppointmentId(appointmentId);
+            Patient patient = appointment.getPatient();
+
+            // Setting Appointment Status of that particular appointment to be True.
+            AppointmentStatus appointmentStatus = appointmentStatusRepository.findByPatient_PatientId(patient.getPatientId());
+            appointmentStatus.setStatus(true);
+            appointmentStatusRepository.save(appointmentStatus);
+
             appointmentRepository.delete(appointment);
             return true;
         } catch (Exception e) {
@@ -100,6 +155,10 @@ public class AppointmentServiceImpl implements AppointmentService {
         try {
             Appointment appointment = appointmentRepository.findByPatient_PatientId(patientId);
             appointmentRepository.delete(appointment);
+
+            // Also deleting the record from AppointmentStatus table
+            AppointmentStatus appointmentStatus = appointmentStatusRepository.findByPatient_PatientId(patientId);
+            appointmentStatusRepository.delete(appointmentStatus);
             return true;
         } catch (Exception e) {
             return false;
@@ -137,7 +196,8 @@ public class AppointmentServiceImpl implements AppointmentService {
             for (Appointment appointment : appointmentList) {
                 appointmentDetailsList.add(new AppointmentDetails(appointment.getAppointmentId(),
                         appointment.getAppointmentTimestamp(), appointment.getPatient().getPatientId(),
-                        appointment.getDepartment().getDepartmentName(), appointment.getPreferredLanguage()));
+                        appointment.getDepartment().getDepartmentName(), appointment.getPreferredLanguage(),
+                        appointment.isAccepted()));
             }
 
             return appointmentDetailsList;
@@ -178,7 +238,8 @@ public class AppointmentServiceImpl implements AppointmentService {
                     if(doctorLanguages.contains(appointmentLanguage))
                         appointmentDetailsList.add(new AppointmentDetails(appointment.getAppointmentId(),
                                 appointment.getAppointmentTimestamp(), appointment.getPatient().getPatientId(),
-                                appointment.getDepartment().getDepartmentName(), appointment.getPreferredLanguage()));
+                                appointment.getDepartment().getDepartmentName(), appointment.getPreferredLanguage(),
+                                appointment.isAccepted()));
                 }
 
                 return appointmentDetailsList;
