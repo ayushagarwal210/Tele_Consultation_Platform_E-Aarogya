@@ -9,7 +9,9 @@ import java.util.List;
 public interface PrescriptionService {
 
 //    public List<Prescription> getPrescriptions(Long patientId);
-    public List<PrescriptionDetails> getPrescriptions(long patientId);
+    public List<PrescriptionDetails> getPrescriptionsPatient(long patientId);
+
+    public List<PrescriptionDetails> getPrescriptionsDoctor(long patientId);
 
     public List<PrescriptionDetails> getAllPrescriptions();
 

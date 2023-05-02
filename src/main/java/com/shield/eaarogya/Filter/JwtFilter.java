@@ -49,8 +49,8 @@ public class JwtFilter extends OncePerRequestFilter {
                 System.out.println(e.getMessage());
             }
         }
-        else
-            System.out.println("JWT do not start with 'Bearer'");
+//        else
+//            System.out.println("JWT do not start with 'Bearer'");
 
 
         if(username!=null && SecurityContextHolder.getContext().getAuthentication()==null)

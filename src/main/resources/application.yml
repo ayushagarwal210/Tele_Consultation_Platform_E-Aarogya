@@ -1,8 +1,10 @@
 cloud:
   aws:
     credentials:
-      access-key: AKIAXVE4JJYY4XYLUFXO
-      secret-key: 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
+      access-key: AKIA4L5HFYD4O65GQFEZ
+#      access-key: AKIAXVE4JJYY4XYLUFXO
+      secret-key: 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
+#      secret-key: aoNhH/bLsTxqxBxUniq3dPPVc6ip/vzZAzlr3a58
 
     region:
       static: eu-north-1
@@ -11,7 +13,7 @@ cloud:
 
 application:
   bucket:
-    name: e-aarogyabucket
+    name: e-aarogya
 
 
 #spring:

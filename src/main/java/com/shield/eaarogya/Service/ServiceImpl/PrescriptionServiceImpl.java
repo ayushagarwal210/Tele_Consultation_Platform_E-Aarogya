@@ -39,35 +39,16 @@ public class PrescriptionServiceImpl implements PrescriptionService {
     @Autowired
     StorageService storageService;
 
-    // --------------------- Get Prescription of a patient based on his ID --------------------------------
+    // --------------------- Get Prescription of a patient based on his ID by patient --------------------------------
     @Override
-    public List<PrescriptionDetails> getPrescriptions(long patientId) {
-        try {
-            List<Prescription> prescriptionList = prescriptionRepository
-                    .findPrescriptionsByPatient_PatientId(patientId);
+    public List<PrescriptionDetails> getPrescriptionsPatient(long patientId) {
+        return getPrescriptionDetailsByPatientId(patientId);
+    }
 
-            Collections.reverse(prescriptionList);
-
-            Collections.reverse(prescriptionList);
-            List<PrescriptionDetails> prescriptionDetailsList = new ArrayList<>();
-
-            for (Prescription prescription : prescriptionList) {
-                prescriptionDetailsList.add(new PrescriptionDetails(prescription.getPrescriptionId(),
-                        prescription.getConsultationDate(), prescription.getObservation(),
-                        prescription.getMedicine(), prescription.getRemark(),
-                        prescription.getDoctor().getFirstName() + " " + prescription.getDoctor().getLastName(),
-                        prescription.getDoctor().getDoctorId(),
-                        prescription.getPatient().getFirstName() + " " + prescription.getPatient().getLastName(),
-                        prescription.getPatient().getPatientId(),
-                        prescription.getFollowUpDate()));
-            }
-
-            return prescriptionDetailsList;
-        } catch (Exception e) {
-            System.out.println("Error occurred in getting prescription details of a patient");
-            e.printStackTrace();
-            return null;
-        }
+    // --------------------- Get Prescription of a patient based on his ID by doctor --------------------------------
+    @Override
+    public List<PrescriptionDetails> getPrescriptionsDoctor(long patientId) {
+        return getPrescriptionDetailsByPatientId(patientId);
     }
 
     // ---------------------- Get All the Prescription present in database --------------------------------
@@ -246,5 +227,34 @@ public class PrescriptionServiceImpl implements PrescriptionService {
             return dailyLogDetailsList;
         }
         return null;
+    }
+
+    // ------------- Private function to get prescription by patient id -------------------------
+    private List<PrescriptionDetails> getPrescriptionDetailsByPatientId(long patientId) {
+        try {
+            List<Prescription> prescriptionList = prescriptionRepository
+                    .findPrescriptionsByPatient_PatientId(patientId);
+
+            Collections.reverse(prescriptionList);
+
+            List<PrescriptionDetails> prescriptionDetailsList = new ArrayList<>();
+
+            for (Prescription prescription : prescriptionList) {
+                prescriptionDetailsList.add(new PrescriptionDetails(prescription.getPrescriptionId(),
+                        prescription.getConsultationDate(), prescription.getObservation(),
+                        prescription.getMedicine(), prescription.getRemark(),
+                        prescription.getDoctor().getFirstName() + " " + prescription.getDoctor().getLastName(),
+                        prescription.getDoctor().getDoctorId(),
+                        prescription.getPatient().getFirstName() + " " + prescription.getPatient().getLastName(),
+                        prescription.getPatient().getPatientId(),
+                        prescription.getFollowUpDate()));
+            }
+
+            return prescriptionDetailsList;
+        } catch (Exception e) {
+            System.out.println("Error occurred in getting prescription details of a patient");
+            e.printStackTrace();
+            return null;
+        }
     }
 }

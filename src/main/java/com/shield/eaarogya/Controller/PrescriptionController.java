@@ -11,22 +11,29 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*",allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/prescription")
 public class PrescriptionController {
 
     @Autowired
     PrescriptionService prescriptionService;
 
-    // ------------------------------ Getting All the Prescriptions of particular patient ---------------------------------
-//    @PreAuthorize("hasRole('ROLE_PATIENT')")
-    @GetMapping("/getPrescriptions/{patientId}")
-    public List<PrescriptionDetails> getPrescriptions(@PathVariable String patientId) {
-        return this.prescriptionService.getPrescriptions(Long.parseLong(patientId));
+    // ------------------------------ Getting All the Prescriptions of particular patient by Patient ---------------------------------
+    @PreAuthorize("hasRole('ROLE_PATIENT')")
+    @GetMapping("/getPrescriptionsPatient/{patientId}")
+    public List<PrescriptionDetails> getPrescriptionsPatient(@PathVariable String patientId) {
+        return this.prescriptionService.getPrescriptionsPatient(Long.parseLong(patientId));
+    }
+
+    // ------------------------------ Getting All the Prescriptions of particular patient by Doctor ---------------------------------
+    @PreAuthorize("hasRole('ROLE_DOCTOR')")
+    @GetMapping("/getPrescriptionsDoctor/{patientId}")
+    public List<PrescriptionDetails> getPrescriptionsDoctor(@PathVariable String patientId) {
+        return this.prescriptionService.getPrescriptionsDoctor(Long.parseLong(patientId));
     }
 
     // -------------------------------------- Adding Prescription to the Database ----------------------------------------
-//    @PreAuthorize("hasRole('ROLE_DOCTOR')")
+    @PreAuthorize("hasRole('ROLE_DOCTOR')")
     @PostMapping("/addPrescription")
     public PrescriptionDetails addPrescription(@RequestBody PrescriptionDetails prescriptionDetails) {
         return this.prescriptionService.addPrescription(prescriptionDetails);

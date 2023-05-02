@@ -13,7 +13,7 @@ import java.io.ByteArrayInputStream;
 import java.util.Date;
 
 @RestController
-@CrossOrigin(origins = "*",allowedHeaders = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/pdf")
 public class PdfController {
 
@@ -42,7 +42,7 @@ public class PdfController {
     }
 
     // ------------------------ Generating Pdf based on Prescription Id for doctor -------------------------------
-//    @PreAuthorize("hasRole('ROLE_DOCTOR')")
+    @PreAuthorize("hasRole('ROLE_DOCTOR')")
     @GetMapping("/getPdfDoctor/{prescriptionId}")
     public ResponseEntity<InputStreamResource> getPdfDoctor(@PathVariable String prescriptionId) {
 

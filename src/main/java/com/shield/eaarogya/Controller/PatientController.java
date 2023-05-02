@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "*")
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/patient")
 public class PatientController {
 
@@ -50,7 +50,7 @@ public class PatientController {
     }
 
     // ------------------------------ Get Patient from Phone Number --------------------------------------
-
+    @PreAuthorize("hasRole('ROLE_PATIENT')")
     @GetMapping("/getPatientByPhoneNumber/{phoneNumber}")
     public Patient getPatientByPhoneNumber(@PathVariable String phoneNumber) {
         return patientService.getPatientByPhoneNumber(phoneNumber);

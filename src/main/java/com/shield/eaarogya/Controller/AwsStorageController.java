@@ -14,6 +14,7 @@ import java.util.List;
 import static java.net.HttpURLConnection.HTTP_OK;
 
 @RestController
+@CrossOrigin(origins = "*", allowedHeaders = "*")
 @RequestMapping("/fileaws")
 public class AwsStorageController {
 
@@ -22,7 +23,7 @@ public class AwsStorageController {
 
     // ------------------------------- Upload a file to AWS S3 ------------------------------------------------------
     // ONLY ALLOW PDF FILES TO UPLOAD
-    @PreAuthorize("hasRole('ROLE_PATIENT')")
+//    @PreAuthorize("hasRole('ROLE_PATIENT')")
     @PostMapping("/uploadFile/{patientId}")
     public String uploadFile(@RequestParam(value = "file")MultipartFile multipartFile, @PathVariable String patientId) {
         System.out.println("Inside API to upload file");
@@ -31,12 +32,20 @@ public class AwsStorageController {
         return storageService.uploadFile(multipartFile, Long.parseLong(patientId));
     }
 
-    // ------------------------------------- Get list of all the files available ---------------------------------------
+    // ------------------------------------- Get list of all the files available on patient side ---------------------------------------
     // On the doctor's end, when the patient uploads any document,
     // whenever doctor clicks on the refresh button of the component
-    @GetMapping("/getAllFiles/{patientId}")
-    public List<String> allFilesS3(@PathVariable String patientId) {
-        return storageService.allFilesS3(patientId);
+    @PreAuthorize("hasRole('ROLE_PATIENT')")
+    @GetMapping("/getAllFilesPatient/{patientId}")
+    public List<String> allFilesPatientS3(@PathVariable String patientId) {
+        return storageService.allFilesPatientS3(patientId);
+    }
+
+    // ---------------------------- Get list of all files on doctor's side --------------------------------------------
+    @PreAuthorize("hasRole('ROLE_DOCTOR')")
+    @GetMapping("/getAllFilesDoctor/{patientId}")
+    public List<String> allFilesDoctorS3(@PathVariable String patientId) {
+        return storageService.allFilesDoctorS3(patientId);
     }
 
     // ------------------------------------- Delete File from S3 -------------------------------------------------------
